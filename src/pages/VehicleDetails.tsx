@@ -3,7 +3,7 @@ import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Search } from "lucide-react";
+import { ArrowLeft, Search, eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -128,7 +128,7 @@ const VehicleDetails = () => {
                           // Handle view details
                         }}
                       >
-                        <Eye className="h-4 w-4" />
+                        <eye className="h-4 w-4" />
                       </Button>
                     </TableCell>
                   </TableRow>
