@@ -2,6 +2,7 @@ import React from "react";
 import { Bell, Camera } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Layout from "@/components/layout/Layout";
+import { cn } from "@/lib/utils";
 
 const mockAlerts = [
   {
