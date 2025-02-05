@@ -1,4 +1,4 @@
-import { Bell, Camera, BarChart2, Car } from "lucide-react";
+import { Bell, Camera, BarChart2, Car, ArrowUpRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import Layout from "@/components/layout/Layout";
 import { cn } from "@/lib/utils";
@@ -29,18 +29,12 @@ const mockAlerts = [
   },
 ];
 
-const mockAlprData = [
-  { id: 1, plate: "ABC123", status: "Whitelist", count: 5 },
-  { id: 2, plate: "XYZ789", status: "Blacklist", count: 2 },
-  { id: 3, plate: "DEF456", status: "Unknown", count: 8 },
-];
-
 const Index = () => {
   const navigate = useNavigate();
 
   return (
     <Layout>
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
           <div className="relative">
@@ -53,57 +47,88 @@ const Index = () => {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="p-6 hover:shadow-lg transition-shadow">
+          <Card className="p-6 hover:shadow-lg transition-shadow bg-gradient-to-br from-primary/5 to-primary/10">
             <div className="flex items-center gap-4">
               <div className="h-12 w-12 rounded-full bg-alert/10 flex items-center justify-center">
                 <Bell className="h-6 w-6 text-alert" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-sm text-gray-500">Active Alerts</p>
                 <p className="text-2xl font-bold">{mockAlerts.filter(a => a.status === "New").length}</p>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate('/alert-analytics')}
+                className="rounded-full hover:bg-primary/5"
+              >
+                <ArrowUpRight className="h-5 w-5" />
+              </Button>
             </div>
           </Card>
           
-          <Card className="p-6 hover:shadow-lg transition-shadow">
+          <Card className="p-6 hover:shadow-lg transition-shadow bg-gradient-to-br from-secondary/5 to-secondary/10">
             <div className="flex items-center gap-4">
               <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center">
                 <Camera className="h-6 w-6 text-secondary" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-sm text-gray-500">Active Cameras</p>
                 <p className="text-2xl font-bold">12</p>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate('/cameras')}
+                className="rounded-full hover:bg-secondary/5"
+              >
+                <ArrowUpRight className="h-5 w-5" />
+              </Button>
             </div>
           </Card>
 
-          <Card className="p-6 hover:shadow-lg transition-shadow">
+          <Card className="p-6 hover:shadow-lg transition-shadow bg-gradient-to-br from-accent/5 to-accent/10">
             <div className="flex items-center gap-4">
               <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center">
                 <Car className="h-6 w-6 text-accent" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-sm text-gray-500">ALPR Events Today</p>
-                <p className="text-2xl font-bold">{mockAlprData.reduce((acc, curr) => acc + curr.count, 0)}</p>
+                <p className="text-2xl font-bold">15</p>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate('/alpr')}
+                className="rounded-full hover:bg-accent/5"
+              >
+                <ArrowUpRight className="h-5 w-5" />
+              </Button>
             </div>
           </Card>
 
-          <Card className="p-6 hover:shadow-lg transition-shadow">
+          <Card className="p-6 hover:shadow-lg transition-shadow bg-gradient-to-br from-primary/5 to-primary/10">
             <div className="flex items-center gap-4">
               <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
                 <BarChart2 className="h-6 w-6 text-primary" />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-sm text-gray-500">Total Events</p>
                 <p className="text-2xl font-bold">156</p>
               </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full hover:bg-primary/5"
+              >
+                <ArrowUpRight className="h-5 w-5" />
+              </Button>
             </div>
           </Card>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          <Card>
+          <Card className="overflow-hidden">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold">Recent Alerts</h2>
@@ -144,45 +169,43 @@ const Index = () => {
             </div>
           </Card>
 
-          <Card>
+          <Card className="overflow-hidden">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold">Recent ALPR Events</h2>
-                <Button
-                  variant="outline"
-                  onClick={() => navigate('/alpr-analytics')}
-                  className="flex items-center gap-2"
-                >
+                <h2 className="text-xl font-semibold">System Health</h2>
+                <Button variant="outline" className="flex items-center gap-2">
                   <BarChart2 className="h-4 w-4" />
-                  View Analytics
+                  View Details
                 </Button>
               </div>
               <div className="space-y-4">
-                {mockAlprData.map((event) => (
-                  <div
-                    key={event.id}
-                    className="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="space-y-1">
-                      <p className="font-medium">{event.plate}</p>
-                      <p className="text-sm text-gray-500">
-                        Detected {event.count} times today
-                      </p>
-                    </div>
-                    <span
-                      className={cn(
-                        "px-3 py-1 rounded-full text-sm",
-                        event.status === "Whitelist"
-                          ? "bg-accent/10 text-accent"
-                          : event.status === "Blacklist"
-                          ? "bg-alert/10 text-alert"
-                          : "bg-gray-100 text-gray-600"
-                      )}
-                    >
-                      {event.status}
-                    </span>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>CPU Usage</span>
+                    <span className="font-medium">45%</span>
                   </div>
-                ))}
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-secondary w-[45%] rounded-full" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Memory Usage</span>
+                    <span className="font-medium">68%</span>
+                  </div>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-accent w-[68%] rounded-full" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Storage</span>
+                    <span className="font-medium">82%</span>
+                  </div>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-alert w-[82%] rounded-full" />
+                  </div>
+                </div>
               </div>
             </div>
           </Card>
