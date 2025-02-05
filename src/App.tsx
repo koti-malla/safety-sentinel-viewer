@@ -8,6 +8,7 @@ import Cameras from "./pages/Cameras";
 import NotFound from "./pages/NotFound";
 import AlertAnalytics from "./pages/AlertAnalytics";
 import AlprAnalytics from "./pages/AlprAnalytics";
+import VehicleDetails from "./pages/VehicleDetails";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/cameras" element={<Cameras />} />
           <Route path="/alert-analytics" element={<AlertAnalytics />} />
           <Route path="/alpr-analytics" element={<AlprAnalytics />} />
+          <Route path="/vehicle-details" element={<VehicleDetails />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

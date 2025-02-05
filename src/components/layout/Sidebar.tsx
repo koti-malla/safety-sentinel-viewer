@@ -16,7 +16,7 @@ const navItems = [
   { icon: Bell, label: "Alerts", path: "/" },
   { icon: Camera, label: "Cameras", path: "/cameras" },
   { icon: Building2, label: "Sites", path: "/sites" },
-  { icon: CarFront, label: "ALPR", path: "/alpr" },
+  { icon: CarFront, label: "ALPR", path: "/alpr-analytics" },
   { icon: Settings, label: "Settings", path: "/settings" },
 ];
 

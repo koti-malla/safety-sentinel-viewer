@@ -1,9 +1,9 @@
 import React from "react";
-import { Card } from "@/components/ui/card";
 import Layout from "@/components/layout/Layout";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Car, Eye } from "lucide-react";
 import {
   ChartContainer,
   ChartTooltip,
@@ -46,16 +46,51 @@ const AlprAnalytics = () => {
   return (
     <Layout>
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/")}
-            className="rounded-full"
-          >
-            <ArrowLeft className="h-6 w-6" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/")}
+              className="rounded-full"
+            >
+              <ArrowLeft className="h-6 w-6" />
+            </Button>
+            <h1 className="text-3xl font-bold">ALPR Analytics</h1>
+          </div>
+          <Button onClick={() => navigate("/vehicle-details")} className="gap-2">
+            <Car className="h-5 w-5" />
+            View All Vehicles
           </Button>
-          <h1 className="text-3xl font-bold">ALPR Analytics</h1>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Total Vehicles Today</h3>
+              <Car className="h-5 w-5 text-secondary" />
+            </div>
+            <p className="mt-2 text-3xl font-bold">247</p>
+            <p className="text-sm text-muted-foreground">+12% from yesterday</p>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Whitelist Matches</h3>
+              <Car className="h-5 w-5 text-accent" />
+            </div>
+            <p className="mt-2 text-3xl font-bold">150</p>
+            <p className="text-sm text-muted-foreground">60% of total vehicles</p>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Blacklist Alerts</h3>
+              <Car className="h-5 w-5 text-alert" />
+            </div>
+            <p className="mt-2 text-3xl font-bold">30</p>
+            <p className="text-sm text-muted-foreground">12% of total vehicles</p>
+          </Card>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -107,29 +142,6 @@ const AlprAnalytics = () => {
                   activeDot={{ r: 8 }}
                 />
               </LineChart>
-            </ChartContainer>
-          </Card>
-
-          <Card className="p-6 md:col-span-2">
-            <h2 className="text-xl font-semibold mb-4">Hourly Vehicle Detection</h2>
-            <ChartContainer className="h-[300px]" config={{}}>
-              <BarChart
-                data={[
-                  { hour: "00:00", vehicles: 8 },
-                  { hour: "04:00", vehicles: 12 },
-                  { hour: "08:00", vehicles: 45 },
-                  { hour: "12:00", vehicles: 35 },
-                  { hour: "16:00", vehicles: 52 },
-                  { hour: "20:00", vehicles: 25 },
-                ]}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="hour" />
-                <YAxis />
-                <Tooltip content={<ChartTooltipContent />} />
-                <Legend />
-                <Bar dataKey="vehicles" fill="#38bdf8" />
-              </BarChart>
             </ChartContainer>
           </Card>
         </div>
