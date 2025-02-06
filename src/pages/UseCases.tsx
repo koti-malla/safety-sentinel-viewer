@@ -40,13 +40,14 @@ const UseCases = () => {
     setPoints(prev => {
       const newPoints = [...prev, { x, y }];
       drawPoints(newPoints);
+      
+      // If we have 4 or more points, show completion message
+      if (newPoints.length >= 4) {
+        toast.success("ROI area defined successfully! You can continue drawing or click 'Stop Drawing'");
+      }
+      
       return newPoints;
     });
-
-    // If we have 4 or more points, complete the polygon
-    if (points.length >= 3) {
-      drawPolygon([...points, { x, y }]);
-    }
   };
 
   const drawPoints = (points: { x: number; y: number }[]) => {
@@ -57,42 +58,41 @@ const UseCases = () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    // Draw guide lines
+    if (points.length > 0) {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      points.forEach((point, index) => {
+        ctx.lineTo(point.x, point.y);
+      });
+      if (points.length >= 4) {
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.2)';
+        ctx.fill();
+      }
+      ctx.strokeStyle = '#38BDF8';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    // Draw points
     points.forEach((point, index) => {
       ctx.beginPath();
-      ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
+      ctx.arc(point.x, point.y, 4, 0, 2 * Math.PI);
       ctx.fillStyle = '#38BDF8';
       ctx.fill();
-      
-      if (index > 0) {
-        ctx.beginPath();
-        ctx.moveTo(points[index - 1].x, points[index - 1].y);
-        ctx.lineTo(point.x, point.y);
-        ctx.strokeStyle = '#38BDF8';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-    });
-  };
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2;
+      ctx.stroke();
 
-  const drawPolygon = (points: { x: number; y: number }[]) => {
-    const canvas = canvasRef.current;
-    if (!canvas || points.length < 3) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    points.forEach((point, index) => {
-      if (index > 0) {
-        ctx.lineTo(point.x, point.y);
-      }
+      // Add point number
+      ctx.font = '12px Arial';
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 2;
+      ctx.strokeText((index + 1).toString(), point.x + 8, point.y + 8);
+      ctx.fillText((index + 1).toString(), point.x + 8, point.y + 8);
     });
-    ctx.closePath();
-    ctx.strokeStyle = '#38BDF8';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.fillStyle = 'rgba(56, 189, 248, 0.1)';
-    ctx.fill();
   };
 
   const handleStartDrawing = () => {
@@ -103,7 +103,7 @@ const UseCases = () => {
       const ctx = canvas.getContext('2d');
       if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-    toast.info("Click to draw ROI points. Minimum 4 points required.");
+    toast.info("Click to place points. Connect at least 4 points to define the ROI area.");
   };
 
   const handleStopDrawing = () => {
@@ -112,11 +112,28 @@ const UseCases = () => {
       return;
     }
     setIsDrawing(false);
-    drawPolygon(points);
-    toast.success("ROI drawing completed");
+    drawPoints(points);
+    toast.success("ROI drawing completed successfully!");
   };
 
   const toggleProcessing = (useCaseId: string) => {
+    const selectedCameraData = MOCK_CAMERAS.find(cam => cam.id === selectedCamera);
+    
+    if (!selectedCameraData) {
+      toast.error("Please select a camera first");
+      return;
+    }
+
+    if (selectedCameraData.status === "inactive") {
+      toast.error("Cannot process with inactive camera");
+      return;
+    }
+
+    if (!points.length || points.length < 4) {
+      toast.error("Please define ROI area before starting processing");
+      return;
+    }
+
     setIsProcessing(prev => {
       const newState = { ...prev, [useCaseId]: !prev[useCaseId] };
       if (newState[useCaseId]) {
@@ -141,7 +158,12 @@ const UseCases = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold tracking-tight">Video Analytics Use Cases</h1>
-          <Button variant="outline" size="sm" onClick={() => setSelectedCamera(null)}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setSelectedCamera(null)}
+            className="text-sm"
+          >
             <Camera className="mr-2 h-4 w-4" />
             Select Camera
           </Button>
@@ -170,25 +192,33 @@ const UseCases = () => {
                       <p className="text-sm text-muted-foreground">{useCase.description}</p>
                     </div>
                     <div className="space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleStartDrawing}
-                        disabled={!selectedCamera || isDrawing}
-                      >
-                        <Target className="mr-2 h-4 w-4" />
-                        Draw ROI
-                      </Button>
-                      {isDrawing && (
-                        <Button variant="secondary" size="sm" onClick={handleStopDrawing}>
+                      {isDrawing ? (
+                        <Button 
+                          variant="secondary" 
+                          size="sm"
+                          onClick={handleStopDrawing}
+                          className="text-xs"
+                        >
                           Stop Drawing
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleStartDrawing}
+                          disabled={!selectedCamera}
+                          className="text-xs"
+                        >
+                          <Target className="mr-1 h-3 w-3" />
+                          Draw ROI
                         </Button>
                       )}
                       <Button
                         variant={isProcessing[useCase.id] ? "secondary" : "default"}
                         size="sm"
                         onClick={() => toggleProcessing(useCase.id)}
-                        disabled={!selectedCamera}
+                        disabled={!selectedCamera || !points.length || points.length < 4}
+                        className="text-xs"
                       >
                         {isProcessing[useCase.id] ? "Stop Processing" : "Start Processing"}
                       </Button>
@@ -220,7 +250,13 @@ const UseCases = () => {
                                 ? "bg-primary text-primary-foreground"
                                 : "hover:bg-accent"
                             }`}
-                            onClick={() => setSelectedCamera(camera.id)}
+                            onClick={() => {
+                              setSelectedCamera(camera.id);
+                              setPoints([]);
+                              setIsDrawing(false);
+                              const ctx = canvasRef.current?.getContext('2d');
+                              if (ctx) ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                            }}
                           >
                             <div className="flex items-center justify-between">
                               <div>
@@ -228,7 +264,9 @@ const UseCases = () => {
                                 <p className="text-sm opacity-90">{camera.location}</p>
                               </div>
                               <div className={`px-2 py-1 rounded-full text-xs ${
-                                camera.status === "active" ? "bg-accent/20" : "bg-gray-200"
+                                camera.status === "active" 
+                                  ? "bg-accent/20 text-accent" 
+                                  : "bg-gray-200 text-gray-600"
                               }`}>
                                 {camera.status}
                               </div>
