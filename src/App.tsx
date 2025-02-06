@@ -12,12 +12,13 @@ import AlertAnalytics from "./pages/AlertAnalytics";
 import AlprAnalytics from "./pages/AlprAnalytics";
 import VehicleDetails from "./pages/VehicleDetails";
 import Settings from "./pages/Settings";
+import UseCases from "./pages/UseCases";
 
 const App = () => {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000, // 1 minute
+        staleTime: 60 * 1000,
         refetchOnWindowFocus: false,
       },
     },
@@ -33,6 +34,7 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/cameras" element={<Cameras />} />
             <Route path="/sites" element={<Sites />} />
+            <Route path="/use-cases" element={<UseCases />} />
             <Route path="/alert-analytics" element={<AlertAnalytics />} />
             <Route path="/alpr-analytics" element={<AlprAnalytics />} />
             <Route path="/vehicle-details" element={<VehicleDetails />} />
