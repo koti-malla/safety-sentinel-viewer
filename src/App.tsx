@@ -13,6 +13,7 @@ import AlprAnalytics from "./pages/AlprAnalytics";
 import VehicleDetails from "./pages/VehicleDetails";
 import Settings from "./pages/Settings";
 import UseCases from "./pages/UseCases";
+import Alerts from "./pages/Alerts";
 
 const App = () => {
   const [queryClient] = useState(() => new QueryClient({
@@ -40,6 +41,7 @@ const App = () => {
             <Route path="/alpr-analytics" element={<AlprAnalytics />} />
             <Route path="/vehicle-details" element={<VehicleDetails />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/alerts" element={<Alerts />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

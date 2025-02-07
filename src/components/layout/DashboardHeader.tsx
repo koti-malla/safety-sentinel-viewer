@@ -13,16 +13,18 @@ const DashboardHeader = () => {
         return 'Alert Analytics';
       case '/alpr-analytics':
         return 'ALPR Analytics';
+      case '/alerts':
+        return 'All Alerts';
       case '/cameras':
-        return 'Cameras';
+        return '';
       case '/sites':
-        return 'Sites';
+        return '';
       case '/settings':
-        return 'Settings';
+        return '';
       case '/use-cases':
-        return 'Use Cases';
+        return '';
       case '/vehicle-details':
-        return 'Vehicle Details';
+        return '';
       default:
         return '';
     }
