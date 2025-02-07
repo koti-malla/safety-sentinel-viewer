@@ -86,7 +86,7 @@ const Alerts = () => {
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Statuses</SelectItem>
+                  <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="New">New</SelectItem>
                   <SelectItem value="Acknowledged">Acknowledged</SelectItem>
                   <SelectItem value="Resolved">Resolved</SelectItem>
@@ -97,7 +97,7 @@ const Alerts = () => {
                   <SelectValue placeholder="Filter by type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Types</SelectItem>
+                  <SelectItem value="all">All Types</SelectItem>
                   <SelectItem value="PPE Violation">PPE Violation</SelectItem>
                   <SelectItem value="Unauthorized Access">Unauthorized Access</SelectItem>
                   <SelectItem value="Fire Detection">Fire Detection</SelectItem>
