@@ -45,6 +45,14 @@ const mockWeeklyTrend = [
 
 const COLORS = ["#10b981", "#ef4444", "#8b5cf6"];
 
+const chartConfig = {
+  whitelist: { color: "#10b981", label: "Whitelist" },
+  blacklist: { color: "#ef4444", label: "Blacklist" },
+  unknown: { color: "#8b5cf6", label: "Unknown" },
+  entries: { color: "#38bdf8", label: "Entries" },
+  exits: { color: "#10b981", label: "Exits" },
+};
+
 const AlprAnalytics = () => {
   const navigate = useNavigate();
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -119,7 +127,7 @@ const AlprAnalytics = () => {
           <Card className="p-4 md:p-6">
             <h2 className="text-lg md:text-xl font-semibold mb-4">Vehicle Status Distribution</h2>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer>
+              <ChartContainer config={chartConfig}>
                 <PieChart>
                   <Pie
                     data={mockVehicleStatus}
@@ -140,14 +148,14 @@ const AlprAnalytics = () => {
                   <Tooltip content={<ChartTooltipContent />} />
                   <Legend />
                 </PieChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </Card>
 
           <Card className="p-4 md:p-6">
             <h2 className="text-lg md:text-xl font-semibold mb-4">Weekly Entry/Exit Trend</h2>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer>
+              <ChartContainer config={chartConfig}>
                 <LineChart data={mockWeeklyTrend}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
@@ -167,7 +175,7 @@ const AlprAnalytics = () => {
                     activeDot={{ r: 8 }}
                   />
                 </LineChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </Card>
         </div>
