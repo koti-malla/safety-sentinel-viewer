@@ -25,7 +25,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  ResponsiveContainer,
 } from "recharts";
 
 const mockAlertsByType = [
@@ -45,6 +44,14 @@ const mockAlertsTrend = [
 ];
 
 const COLORS = ["#ef4444", "#38bdf8", "#10b981", "#8b5cf6", "#f59e0b"];
+
+const chartConfig = {
+  violations: { color: "#ef4444", label: "PPE Violations" },
+  unauthorized: { color: "#38bdf8", label: "Unauthorized Access" },
+  fire: { color: "#10b981", label: "Fire Detection" },
+  smoke: { color: "#8b5cf6", label: "Smoke Detection" },
+  restricted: { color: "#f59e0b", label: "Restricted Area" },
+};
 
 const AlertAnalytics = () => {
   const navigate = useNavigate();
@@ -90,7 +97,7 @@ const AlertAnalytics = () => {
           <Card className="p-4 md:p-6">
             <h2 className="text-lg md:text-xl font-semibold mb-4">Alerts by Type</h2>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer>
+              <ChartContainer config={chartConfig}>
                 <PieChart>
                   <Pie
                     data={mockAlertsByType}
@@ -111,14 +118,14 @@ const AlertAnalytics = () => {
                   <Tooltip content={<ChartTooltipContent />} />
                   <Legend />
                 </PieChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </Card>
 
           <Card className="p-4 md:p-6">
             <h2 className="text-lg md:text-xl font-semibold mb-4">Weekly Alert Trend</h2>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer>
+              <ChartContainer config={chartConfig}>
                 <LineChart data={mockAlertsTrend}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
@@ -144,14 +151,14 @@ const AlertAnalytics = () => {
                     activeDot={{ r: 8 }}
                   />
                 </LineChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </Card>
 
           <Card className="p-4 md:p-6 md:col-span-2">
             <h2 className="text-lg md:text-xl font-semibold mb-4">Alert Distribution by Hour</h2>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer>
+              <ChartContainer config={chartConfig}>
                 <BarChart
                   data={[
                     { hour: "00:00", alerts: 5 },
@@ -169,7 +176,7 @@ const AlertAnalytics = () => {
                   <Legend />
                   <Bar dataKey="alerts" fill="#38bdf8" />
                 </BarChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </div>
           </Card>
         </div>
