@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon, Filter } from "lucide-react";
 import {
   ChartContainer,
   ChartTooltip,
@@ -22,6 +25,7 @@ import {
   PieChart,
   Pie,
   Cell,
+  ResponsiveContainer,
 } from "recharts";
 
 const mockAlertsByType = [
@@ -44,101 +48,129 @@ const COLORS = ["#ef4444", "#38bdf8", "#10b981", "#8b5cf6", "#f59e0b"];
 
 const AlertAnalytics = () => {
   const navigate = useNavigate();
+  const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
     <Layout>
-      <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/")}
-            className="rounded-full"
+      <div className="space-y-4 md:space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-[240px] justify-start text-left font-normal"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+            <Button variant="outline" size="icon">
+              <Filter className="h-4 w-4" />
+            </Button>
+          </div>
+          <Button 
+            onClick={() => navigate("/alerts")}
+            className="w-full sm:w-auto"
           >
-            <ArrowLeft className="h-6 w-6" />
+            View All Alerts
           </Button>
-          <h1 className="text-3xl font-bold">Alert Analytics</h1>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Alerts by Type</h2>
-            <ChartContainer className="h-[300px]" config={{}}>
-              <PieChart>
-                <Pie
-                  data={mockAlertsByType}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
+        <div className="grid gap-4 md:gap-6 md:grid-cols-2">
+          <Card className="p-4 md:p-6">
+            <h2 className="text-lg md:text-xl font-semibold mb-4">Alerts by Type</h2>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={mockAlertsByType}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {mockAlertsByType.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<ChartTooltipContent />} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card className="p-4 md:p-6">
+            <h2 className="text-lg md:text-xl font-semibold mb-4">Weekly Alert Trend</h2>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer>
+                <LineChart data={mockAlertsTrend}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip content={<ChartTooltipContent />} />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="violations"
+                    stroke="#ef4444"
+                    activeDot={{ r: 8 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="unauthorized"
+                    stroke="#38bdf8"
+                    activeDot={{ r: 8 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="fire"
+                    stroke="#10b981"
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card className="p-4 md:p-6 md:col-span-2">
+            <h2 className="text-lg md:text-xl font-semibold mb-4">Alert Distribution by Hour</h2>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer>
+                <BarChart
+                  data={[
+                    { hour: "00:00", alerts: 5 },
+                    { hour: "04:00", alerts: 8 },
+                    { hour: "08:00", alerts: 15 },
+                    { hour: "12:00", alerts: 20 },
+                    { hour: "16:00", alerts: 25 },
+                    { hour: "20:00", alerts: 12 },
+                  ]}
                 >
-                  {mockAlertsByType.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip content={<ChartTooltipContent />} />
-                <Legend />
-              </PieChart>
-            </ChartContainer>
-          </Card>
-
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Weekly Alert Trend</h2>
-            <ChartContainer className="h-[300px]" config={{}}>
-              <LineChart data={mockAlertsTrend}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip content={<ChartTooltipContent />} />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="violations"
-                  stroke="#ef4444"
-                  activeDot={{ r: 8 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="unauthorized"
-                  stroke="#38bdf8"
-                  activeDot={{ r: 8 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="fire"
-                  stroke="#10b981"
-                  activeDot={{ r: 8 }}
-                />
-              </LineChart>
-            </ChartContainer>
-          </Card>
-
-          <Card className="p-6 md:col-span-2">
-            <h2 className="text-xl font-semibold mb-4">Alert Distribution by Hour</h2>
-            <ChartContainer className="h-[300px]" config={{}}>
-              <BarChart
-                data={[
-                  { hour: "00:00", alerts: 5 },
-                  { hour: "04:00", alerts: 8 },
-                  { hour: "08:00", alerts: 15 },
-                  { hour: "12:00", alerts: 20 },
-                  { hour: "16:00", alerts: 25 },
-                  { hour: "20:00", alerts: 12 },
-                ]}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="hour" />
-                <YAxis />
-                <Tooltip content={<ChartTooltipContent />} />
-                <Legend />
-                <Bar dataKey="alerts" fill="#38bdf8" />
-              </BarChart>
-            </ChartContainer>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="hour" />
+                  <YAxis />
+                  <Tooltip content={<ChartTooltipContent />} />
+                  <Legend />
+                  <Bar dataKey="alerts" fill="#38bdf8" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </Card>
         </div>
       </div>

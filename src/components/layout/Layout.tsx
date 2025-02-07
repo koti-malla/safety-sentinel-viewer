@@ -1,5 +1,6 @@
 import React from "react";
 import Sidebar from "./Sidebar";
+import DashboardHeader from "./DashboardHeader";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,7 +11,8 @@ const Layout = ({ children }: LayoutProps) => {
     <div className="min-h-screen bg-gray-50">
       <Sidebar />
       <main className="pl-0 md:pl-64 min-h-screen">
-        <div className="container py-8">
+        <DashboardHeader />
+        <div className="container py-4 md:py-8 px-4 md:px-8">
           {children}
         </div>
       </main>
