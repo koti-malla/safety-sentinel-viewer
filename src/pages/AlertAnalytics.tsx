@@ -85,17 +85,16 @@ const AlertAnalytics = () => {
               <Filter className="h-4 w-4" />
             </Button>
           </div>
-          <Button 
-            onClick={() => navigate("/alerts")}
-            className="w-full sm:w-auto"
-          >
+          <Button onClick={() => navigate("/alerts")} className="w-full sm:w-auto">
             View All Alerts
           </Button>
         </div>
 
         <div className="grid gap-4 md:gap-6 md:grid-cols-2">
-          <Card className="p-4 md:p-6">
-            <h2 className="text-lg md:text-xl font-semibold mb-4">Alerts by Type</h2>
+          <Card className="p-4 md:p-6 bg-white shadow-lg">
+            <h2 className="text-lg md:text-xl font-semibold mb-4">
+              Alerts by Type
+            </h2>
             <div className="h-[300px] w-full">
               <ChartContainer config={chartConfig}>
                 <PieChart>
@@ -105,8 +104,10 @@ const AlertAnalytics = () => {
                     cy="50%"
                     labelLine={false}
                     outerRadius={80}
+                    innerRadius={40}
                     fill="#8884d8"
                     dataKey="value"
+                    paddingAngle={5}
                   >
                     {mockAlertsByType.map((entry, index) => (
                       <Cell
@@ -122,8 +123,10 @@ const AlertAnalytics = () => {
             </div>
           </Card>
 
-          <Card className="p-4 md:p-6">
-            <h2 className="text-lg md:text-xl font-semibold mb-4">Weekly Alert Trend</h2>
+          <Card className="p-4 md:p-6 bg-white shadow-lg">
+            <h2 className="text-lg md:text-xl font-semibold mb-4">
+              Weekly Alert Trend
+            </h2>
             <div className="h-[300px] w-full">
               <ChartContainer config={chartConfig}>
                 <LineChart data={mockAlertsTrend}>
@@ -136,18 +139,24 @@ const AlertAnalytics = () => {
                     type="monotone"
                     dataKey="violations"
                     stroke="#ef4444"
+                    strokeWidth={2}
+                    dot={{ r: 6 }}
                     activeDot={{ r: 8 }}
                   />
                   <Line
                     type="monotone"
                     dataKey="unauthorized"
                     stroke="#38bdf8"
+                    strokeWidth={2}
+                    dot={{ r: 6 }}
                     activeDot={{ r: 8 }}
                   />
                   <Line
                     type="monotone"
                     dataKey="fire"
                     stroke="#10b981"
+                    strokeWidth={2}
+                    dot={{ r: 6 }}
                     activeDot={{ r: 8 }}
                   />
                 </LineChart>
@@ -155,8 +164,10 @@ const AlertAnalytics = () => {
             </div>
           </Card>
 
-          <Card className="p-4 md:p-6 md:col-span-2">
-            <h2 className="text-lg md:text-xl font-semibold mb-4">Alert Distribution by Hour</h2>
+          <Card className="p-4 md:p-6 bg-white shadow-lg md:col-span-2">
+            <h2 className="text-lg md:text-xl font-semibold mb-4">
+              Alert Distribution by Hour
+            </h2>
             <div className="h-[300px] w-full">
               <ChartContainer config={chartConfig}>
                 <BarChart
@@ -174,7 +185,11 @@ const AlertAnalytics = () => {
                   <YAxis />
                   <Tooltip content={<ChartTooltipContent />} />
                   <Legend />
-                  <Bar dataKey="alerts" fill="#38bdf8" />
+                  <Bar
+                    dataKey="alerts"
+                    fill="#38bdf8"
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ChartContainer>
             </div>
