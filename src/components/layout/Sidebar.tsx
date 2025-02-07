@@ -14,10 +14,10 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const navItems = [
-  { icon: Bell, label: "Alerts", path: "/" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/" },
+  { icon: Bell, label: "Alerts", path: "/alert-analytics" },
   { icon: Camera, label: "Cameras", path: "/cameras" },
   { icon: Building2, label: "Sites", path: "/sites" },
-  { icon: LayoutDashboard, label: "Use Cases", path: "/use-cases" },
   { icon: CarFront, label: "ALPR", path: "/alpr-analytics" },
   { icon: Settings, label: "Settings", path: "/settings" },
 ];
