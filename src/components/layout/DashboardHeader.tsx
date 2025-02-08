@@ -1,39 +1,37 @@
+
 import React from "react";
 import { Bell } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const DashboardHeader = () => {
   const location = useLocation();
   
-  const getPageTitle = () => {
-    switch (location.pathname) {
-      case '/':
-        return 'Analytics Dashboard';
-      case '/alert-analytics':
-        return 'Alert Analytics';
-      case '/alpr-analytics':
-        return 'ALPR Analytics';
-      case '/alerts':
-        return 'All Alerts';
-      case '/cameras':
-        return '';
-      case '/sites':
-        return '';
-      case '/settings':
-        return '';
-      case '/use-cases':
-        return '';
-      case '/vehicle-details':
-        return '';
-      default:
-        return '';
-    }
-  };
-
   return (
     <div className="bg-white border-b border-gray-200 px-4 md:px-8 py-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl md:text-3xl font-bold">{getPageTitle()}</h1>
+        <nav className="flex items-center gap-4">
+          <Link to="/cameras">
+            <Button variant="ghost" className="text-lg font-semibold">
+              Cameras
+            </Button>
+          </Link>
+          <Link to="/sites">
+            <Button variant="ghost" className="text-lg font-semibold">
+              Sites
+            </Button>
+          </Link>
+          <Link to="/use-cases">
+            <Button variant="ghost" className="text-lg font-semibold">
+              AI Vision Center
+            </Button>
+          </Link>
+          <Link to="/settings">
+            <Button variant="ghost" className="text-lg font-semibold">
+              Settings
+            </Button>
+          </Link>
+        </nav>
         <div className="relative">
           <div className="absolute -top-1 -right-1 w-3 h-3">
             <span className="absolute inline-flex h-full w-full rounded-full bg-alert opacity-75 animate-pulse-ring" />
