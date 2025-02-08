@@ -1,9 +1,10 @@
+
 import React from "react";
 import Layout from "@/components/layout/Layout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, Eye } from "lucide-react";
+import { ArrowLeft, Search, Eye, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -14,6 +15,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 const mockVehicles = [
   {
@@ -51,6 +54,9 @@ const mockVehicles = [
 const VehicleDetails = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState("all");
+  const [makeFilter, setMakeFilter] = React.useState("all");
+  const [colorFilter, setColorFilter] = React.useState("all");
 
   return (
     <Layout>
@@ -70,7 +76,7 @@ const VehicleDetails = () => {
         </div>
 
         <Card className="p-6">
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -80,7 +86,45 @@ const VehicleDetails = () => {
                 className="pl-9"
               />
             </div>
-            <Button variant="secondary">Export Data</Button>
+            <div className="flex items-center gap-2">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="Whitelist">Whitelist</SelectItem>
+                  <SelectItem value="Blacklist">Blacklist</SelectItem>
+                  <SelectItem value="Unknown">Unknown</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select value={makeFilter} onValueChange={setMakeFilter}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="Filter by make" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Makes</SelectItem>
+                  <SelectItem value="Toyota">Toyota</SelectItem>
+                  <SelectItem value="Honda">Honda</SelectItem>
+                  <SelectItem value="Ford">Ford</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select value={colorFilter} onValueChange={setColorFilter}>
+                <SelectTrigger className="w-[160px]">
+                  <SelectValue placeholder="Filter by color" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Colors</SelectItem>
+                  <SelectItem value="Black">Black</SelectItem>
+                  <SelectItem value="White">White</SelectItem>
+                  <SelectItem value="Silver">Silver</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Button variant="secondary">Export Data</Button>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
@@ -108,13 +152,11 @@ const VehicleDetails = () => {
                     <TableCell>
                       <Badge
                         variant="secondary"
-                        className={
-                          vehicle.status === "Whitelist"
-                            ? "bg-accent/10 text-accent"
-                            : vehicle.status === "Blacklist"
-                            ? "bg-alert/10 text-alert"
-                            : "bg-gray-100 text-gray-600"
-                        }
+                        className={cn(
+                          vehicle.status === "Whitelist" && "bg-accent/10 text-accent",
+                          vehicle.status === "Blacklist" && "bg-alert/10 text-alert",
+                          vehicle.status === "Unknown" && "bg-gray-100 text-gray-600"
+                        )}
                       >
                         {vehicle.status}
                       </Badge>
